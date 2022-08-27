@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "discord.js": "^14.3.0",
+    "minimist": "^1.2.6",
+    "node-watch": "^0.7.3"
+  },
+  "scripts": {
+    "build": "pkg . --targets node18-linux-arm64,node18-linux-x64 --out-path dist"
+  },
+  "bin": "index.js",
+  "name": "disbuketjs",
+  "version": "1.0.0",
+  "description": "Connect minecraft's chat/command/log to discord!",
+  "main": "index.js",
+  "author": "Qwreey <qwreey75@gmail.com> (http://qwreey75.github.io)",
+  "license": "MIT",
+  "devDependencies": {
+    "pkg": "^5.8.0"
+  }
+}
