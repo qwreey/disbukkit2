@@ -1,0 +1,21 @@
+
+# build output folder
+dist/**
+
+# yarn lock file
+yarn.lock
+
+# npm lock file
+package.lock.json
+
+# config file
+disbucket.config.json
+
+# node modules
+node_modules/**
+
+# MinecraftServer
+# for test, i added minecraft server folder in this project
+# but it's too big to upload. this is reason of this ignore exist
+MinecraftServer/**
+
