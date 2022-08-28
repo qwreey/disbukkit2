@@ -9,7 +9,7 @@
     "build": "pkg . --targets node18-linux-arm64,node18-linux-x64 --out-path dist"
   },
   "bin": "index.js",
-  "name": "disbuketjs",
+  "name": "disbucketjs",
   "version": "1.0.0",
   "description": "Connect minecraft's chat/command/log to discord!",
   "main": "index.js",

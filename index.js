@@ -2,25 +2,25 @@
 const { Client, GatewayIntentBits, TextChannel, GuildMember } = require('discord.js');
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages] });
 const messageHandlerClass = require("./messageHandler") // message update handler
-const fileWatchClass = require("./fileWatch") // file update handler
-const logformatterClass = require("./logformatter")
+const fileWatchClass      = require("./fileWatch") // file update handler
+const logformatterClass   = require("./logformatter")
 const commandHandlerClass = require("./commandHandler")
-const settings = require("./settingsHandler").load()
+const settings            = require("./settingsHandler").load()
 
-let /** @type { messageBuffer } */     channelMessageHandler,
-    /** @type { TextChannel } */       channel,
-    /** @type { fileWatchClass } */    logfileWatch,
-    /** @type { logformatterClass } */ logformatter,
-    /** @type {commandHandlerClass} */ commandHandler
+let /** @type { messageHandlerClass } */ channelMessageHandler,
+    /** @type { TextChannel } */         channel,
+    /** @type { fileWatchClass } */      logfileWatch,
+    /** @type { logformatterClass } */   logformatter,
+    /** @type { commandHandlerClass } */ commandHandler
 
-const /** @type { String } */ logfile = settings.logfile
-const /** @type { String } */ chatTellraw = settings.chatTellraw
-const /** @type { String } */ chatFormatter = settings.chatFormatter
-const /** @type { String } */ commandTellraw = settings.commandTellraw
+const /** @type { String } */ logfile          = settings.logfile
+const /** @type { String } */ chatTellraw      = settings.chatTellraw
+const /** @type { String } */ chatFormatter    = settings.chatFormatter
+const /** @type { String } */ commandTellraw   = settings.commandTellraw
 const /** @type { String } */ commandFormatter = settings.commandFormatter
 
 function safeString(str) {
-    return str.replace(/"/,'\\"').replace(/\\/,"\\\\").replace(/\n/,"")
+    return str.replace(/\\/,"\\\\").replace(/"/,'\\"').replace(/\n/,"")
 }
 
 /** @param { GuildMember } member member who chatted */
@@ -50,17 +50,19 @@ async function command(member,content) {
 }
 
 client.on('ready', async () => {
-    // load log formatter
-    logformatter = new logformatterClass(settings)
-    commandHandler = new commandHandlerClass(settings)
-
-    // load channel buffer
+    // load channel
     channel = await client.channels.fetch(settings.channelId)
-    channelMessageHandler = new messageHandlerClass(channel,null)
-    channelMessageHandler.formatter = logformatter.format.bind(logformatter)
 
-    // load log file watcher
-    logfileWatch = new fileWatchClass(logfile)
+    // load classes
+    logformatter = new logformatterClass(settings) // formatter
+    commandHandler = new commandHandlerClass(settings) // command handler
+    channelMessageHandler = new messageHandlerClass(channel,{ // message handler
+        settings: settings,
+        formatter: logformatter.format.bind(logformatter),
+        lastMessage: null,
+    })
+    logfileWatch = new fileWatchClass(logfile) // load log file watcher
+
     let ignore = false
     logfileWatch.on("append",(/** @type {String} */ content)=>{
         // when startup
@@ -107,7 +109,8 @@ client.on('messageCreate', async message => {
         await command(message.member,"list")
     } else if (content.startsWith("/")) { // command mode
         content = content.substring(1)
-        let allowed
+        let commandableRole = settings.commandableRole
+        let allowed = commandableRole && message.member.roles.cache.has(commandableRole)
 
         if (!allowed && settings.allowedCommands) {
             let chatableRole = settings.chatableRole
@@ -124,7 +127,7 @@ client.on('messageCreate', async message => {
             await command(message.member,content)
         } else {
             channelMessageHandler.appendMessage(
-                settings.notPermitted.replace(
+                settings.commandNotPermitted.replace(
                     /\${username}/,
                     safeString(message.member.displayName)
                 )
@@ -134,6 +137,13 @@ client.on('messageCreate', async message => {
         let chatableRole = settings.chatableRole
         if (!chatableRole || message.member.roles.cache.has(chatableRole)) {
             await chat(message.member,content)
+        } else {
+            channelMessageHandler.appendMessage(
+                settings.chatNotPermitted.replace(
+                    /\${username}/,
+                    safeString(message.member.displayName)
+                )
+            )
         }
     }
     await message.delete()

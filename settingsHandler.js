@@ -3,12 +3,23 @@ const fs = require('fs')
 let argsSchema = Object.entries({
     "--logfile": "logfile",
     "-l": "logfile",
+    "--session": "session",
+    "-s": "session",
+    "--delay": "delay",
+    "-d": "delay",
     "--chatTellraw": "chatTellraw",
     "--chatFormatter": "chatFormatter",
     "--commandTellraw": "commandTellraw",
     "--commandFormatter": "commandFormatter",
-    "--noPermission": "noPermission",
-    "--session": "session",
+    "--commandNotPermitted": "commandNotPermitted",
+    "--chatNotPermitted": "chatNotPermitted",
+    "--chatableRole": "chatableRole",
+    "--commandableRole": "commandableRole",
+    "--allowedCommands": "allowedCommands",
+    "--commandProcess": "commandProcess",
+    "--maxlength": "maxlength",
+    "--footer": "footer",
+    "--header": "header",
 })
 
 let defaults = Object.entries({
@@ -17,7 +28,8 @@ let defaults = Object.entries({
     "chatFormatter": "\x1b[35m[@${username}]\x1b[0m ${content}",
     "commandTellraw": "tellraw @a [{\"color\":\"green\",\"text\":\"[@${username}] execute \"},{\"color\":\"white\",\"text\":\" /${content}\"}]",
     "commandFormatter": "\x1b[35m[@${username}]\x1b[0m executed /${content}",
-    "notPermitted": "\x1b[31m[@${username}] You don't have permission to execute that command\x1b[0m",
+    "commandNotPermitted": "\x1b[31m[@${username}] You don't have permission to execute that command\x1b[0m",
+    "chatNotPermitted": "\x1b[31m[@${username}] You don't have permission to chat\x1b[0m",
     "commandProcess": {
         "name": "tmux",
         "argsBeforeSession": ["send-keys","-t"],
@@ -27,10 +39,17 @@ let defaults = Object.entries({
     "session": "minecraft",
     "chatableRole": null,
     "commandableRole": null,
-    "allowedCommands": ["list "]
+    "allowedCommands": ["list "],
+    "delay": 1500,
+    "header": "```ansi\n",
+    "footer": "\n```",
+    "maxlength": 2000,
 })
 
 module.exports = {
+    defaults: defaults,
+    argsSchema: argsSchema,
+
     load() {
         const argv = require('minimist')(process.argv.slice(2));
         const configFile = argv["--config"] ?? argv["-c"] ?? "./disbucket.config.json"

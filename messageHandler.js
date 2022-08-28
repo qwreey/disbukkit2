@@ -1,20 +1,21 @@
 const { TextChannel, Message } = require("discord.js")
 
 class messageBuffer {
-    constructor (channel,lastMessage,config) {
+    constructor (channel,config) {
         /** @type { Message } */
-        this.lastMessage = lastMessage
+        this.lastMessage = config?.lastMessage
         /** @type { TextChannel } */
         this.channel = channel
 
+        this.formatter = config?.formatter
         this.committed = []
         this.updateTimeout = null
         this.changedWhenTimeout = false
-        this.delay = config?.delay ?? 1500
+        this.delay = parseInt(config?.settings?.delay) || 1500
 
-        this.header = config?.header ?? "```ansi\n"
-        this.footer = config?.footer ?? "\n```"
-        this.maxlength = (config?.maxlength ?? 2000) - this.header.length - this.footer.length
+        this.header = config?.settings?.header ?? "```ansi\n"
+        this.footer = config?.settings?.footer ?? "\n```"
+        this.maxlength = (config?.settings?.maxlength ?? 2000) - this.header.length - this.footer.length
     }
 
     async commitMessage() {
@@ -36,6 +37,10 @@ class messageBuffer {
             }
             this.lastMessage = await this.channel.send(content)
         }
+    }
+
+    setLastMessage(message) {
+        this.lastMessage = message
     }
 
     delayedUpdate() {
