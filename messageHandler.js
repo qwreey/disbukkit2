@@ -38,7 +38,7 @@ class messageBuffer {
         }
     }
 
-    async delayedUpdate() {
+    delayedUpdate() {
         this.updateTimeout = null
         if (this.changedWhenTimeout) {
             this.changedWhenTimeout = false
@@ -50,7 +50,7 @@ class messageBuffer {
         }
     }
 
-    async updateMessage() {
+    updateMessage() {
         if (this.updateTimeout) {
             this.changedWhenTimeout = true
         } else {
@@ -62,15 +62,19 @@ class messageBuffer {
         }
     }
 
-    async appendMessage(appendString) {
+    appendMessage(appendString,noFormatter) {
+        let formatter = this.formatter
         appendString.split(/\r?\n/).forEach(str=>{
-            if (str.length == 0) return
+            if ((!noFormatter) && formatter) str = formatter(str)
+            if (!str || str.length == 0) return
+
             str = str.trim() + "\n"
             let buflen = this.committed.length
-            if (buflen == 0) {
+            if (buflen == 0 || !this.committed[0]) {
                 this.committed[0] = this.header
                 buflen = 1
             }
+
             if (this.committed[buflen-1].length + str.length <= this.maxlength) {
                 this.committed[buflen-1] += str
             } else this.committed[buflen] = this.header + str.substring(this.maxlength)
