@@ -1,17 +1,37 @@
+const fs = require('fs')
 
 let argsSchema = Object.entries({
     "--logfile": "logfile",
     "-l": "logfile",
-    "--chatCommand": "chatCommand",
+    "--chatTellraw": "chatTellraw",
+    "--chatFormatter": "chatFormatter",
+    "--commandTellraw": "commandTellraw",
+    "--commandFormatter": "commandFormatter",
+    "--noPermission": "noPermission",
+    "--session": "session",
 })
 
 let defaults = Object.entries({
     "logfile": "./logs/latest.log",
-    "chatCommand": "tellraw @a [{\"color\":\"green\",\"text\":\"[@${username}]\"},{\"color\":\"white\",\"text\":\" ${content}\"}]",
+    "chatTellraw": "tellraw @a [{\"color\":\"green\",\"text\":\"[@${username}]\"},{\"color\":\"white\",\"text\":\" ${content}\"}]",
+    "chatFormatter": "\x1b[35m[@${username}]\x1b[0m ${content}",
+    "commandTellraw": "tellraw @a [{\"color\":\"green\",\"text\":\"[@${username}] execute \"},{\"color\":\"white\",\"text\":\" /${content}\"}]",
+    "commandFormatter": "\x1b[35m[@${username}]\x1b[0m executed /${content}",
+    "notPermitted": "\x1b[31m[@${username}] You don't have permission to execute that command\x1b[0m",
+    "commandProcess": {
+        "name": "tmux",
+        "argsBeforeSession": ["send-keys","-t"],
+        "argsBeforeCommand": [],
+        "argsAfter": ["ENTER"]
+    },
+    "session": "minecraft",
+    "chatableRole": null,
+    "commandableRole": null,
+    "allowedCommands": ["list "]
 })
 
 module.exports = {
-    load(configFile) {
+    load() {
         const argv = require('minimist')(process.argv.slice(2));
         const configFile = argv["--config"] ?? argv["-c"] ?? "./disbucket.config.json"
         if (!fs.existsSync(configFile)) {
@@ -35,6 +55,7 @@ module.exports = {
         })
         argsSchema.forEach(([key,argName])=>{
             let value = argv[argName]
+            try { value = JSON.parse(value) } catch {}
             if (value) settings[key] = value
         })
         defaults.forEach(([key,value])=>{

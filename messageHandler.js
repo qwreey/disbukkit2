@@ -28,7 +28,7 @@ class messageBuffer {
                 if (this.lastMessage.content != content) {
                     try {await this.lastMessage.edit(content)}
                     catch (err) {
-                        console.error(`Error occurred on editing message\n${occured}`)
+                        console.error(`[ERROR] Error occurred on editing message (${err})`)
                         this.lastMessage = await this.channel.send(content)
                     }
                 }
