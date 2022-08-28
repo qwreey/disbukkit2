@@ -1,5 +1,39 @@
 const fs = require('fs')
 
+/*
+
+[
+    {
+        name: "logfile",
+        defaultValue: "./logs/latest.log",
+        args: ["--logfile","l"],
+        help: "path to Minecraft log file.",
+        type: "String"
+    },
+    {
+        name: "session",
+        defaultValue: "minecraft",
+        args: ["--session","-s"],
+        help: "session name of screen or tmux",
+        type: "String"
+    },
+    {
+        name: "delay",
+        defaultValue: "1500",
+        args: ["--delay","-d"],
+        help: "update delay in ms, if this value too low, cause limit rate error",
+        type: "Number",
+    },
+    {
+        name: "chatTellraw",
+        defaultValue: ""
+    }
+]
+
+TODO: Making auto docs
+
+*/
+
 let argsSchema = Object.entries({
     "--logfile": "logfile",
     "-l": "logfile",
