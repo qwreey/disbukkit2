@@ -102,7 +102,7 @@ module.exports = {
 
     load() {
         const argv = require('minimist')(process.argv.slice(2));
-        const configFile = argv["--config"] ?? argv["-c"] ?? "./disbucket.config.json"
+        const configFile = argv["--config"] ?? argv["-c"] ?? "./disbuckkit.config.json"
         if (!fs.existsSync(configFile)) {
             console.error(`ERROR: file ${configFile?.toString()} not found`)
             process.exit(1)
