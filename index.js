@@ -2,6 +2,7 @@
 const { Client, GatewayIntentBits, TextChannel, GuildMember } = require('discord.js');
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages] });
 const { default: Dokdo } =  require('dokdo')
+const { dokdo } =  require('dokdo')
 const messageHandlerClass = require("./messageHandler") // message update handler
 const fileWatchClass      = require("./fileWatch") // file update handler
 const logformatterClass   = require("./logformatter")
@@ -22,7 +23,7 @@ const /** @type { String } */ commandTellraw   = settings.commandTellraw
 const /** @type { String } */ commandFormatter = settings.commandFormatter
 
 // load dokdo
-if (!settings.disableDokdo) dokdoHandler = new Dokdo(client, settings.dokdoOptions)
+if (!settings.disableDokdo) dokdoHandler = new dokdo(client, settings.dokdoOptions)
 
 /** Escape chat string */
 function safeString(str) {
