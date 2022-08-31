@@ -106,7 +106,7 @@ client.on('messageCreate', async message => {
     if (!content) return
 
     if (content == "/list") { // list players
-        await command(message.member,"list")
+        command(message.member,"list")
     } else if (content.startsWith("/")) { // command mode
         content = content.substring(1)
         let commandableRole = settings.commandableRole
@@ -124,7 +124,7 @@ client.on('messageCreate', async message => {
         }
 
         if (allowed) {
-            await command(message.member,content)
+            command(message.member,content)
         } else {
             channelMessageHandler.appendMessage(
                 settings.commandNotPermitted.replace(
@@ -136,7 +136,7 @@ client.on('messageCreate', async message => {
     } else { // chat mode
         let chatableRole = settings.chatableRole
         if (!chatableRole || message.member.roles.cache.has(chatableRole)) {
-            await chat(message.member,content)
+            chat(message.member,content) // DO NOT AWAIT!
         } else {
             channelMessageHandler.appendMessage(
                 settings.chatNotPermitted.replace(
