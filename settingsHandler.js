@@ -56,9 +56,9 @@ let argsSchema = Object.entries({
     "--header": "header",
 })
 
-let defaults = Object.entries({
+let defaults = {
     "logfile": "./logs/latest.log",
-    "chatTellraw": "tellraw @a [{\"color\":\"green\",\"text\":\"[@${username}]\"},{\"color\":\"white\",\"text\":\" ${content}\"}]",
+    "chatTellraw": "execute as @a run tellraw @s [{\"color\":\"green\",\"text\":\"[@${username}]\"},{\"color\":\"white\",\"text\":\" ${content}\"}]",
     "chatFormatter": "\x1b[35m[@${username}]\x1b[0m ${content}",
     "commandTellraw": "tellraw @a [{\"color\":\"green\",\"text\":\"[@${username}] execute \"},{\"color\":\"white\",\"text\":\" /${content}\"}]",
     "commandFormatter": "\x1b[35m[@${username}]\x1b[0m executed /${content}",
@@ -78,11 +78,20 @@ let defaults = Object.entries({
     "header": "```ansi\n",
     "footer": "\n```",
     "maxlength": 2000,
-})
+}
+
+let helps = {
+    "logfile": "Path to minecraft log file.",
+}
 
 module.exports = {
     defaults: defaults,
     argsSchema: argsSchema,
+
+    /** build help message */
+    help() {
+
+    },
 
     load() {
         const argv = require('minimist')(process.argv.slice(2));
@@ -111,7 +120,7 @@ module.exports = {
             try { value = JSON.parse(value) } catch {}
             if (value) settings[key] = value
         })
-        defaults.forEach(([key,value])=>{
+        Object.entries(defaults).forEach(([key,value])=>{
             if (settings[key] === undefined) {
                 settings[key] = value
             }
