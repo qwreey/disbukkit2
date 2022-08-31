@@ -1,6 +1,7 @@
 // discord js
 const { Client, GatewayIntentBits, TextChannel, GuildMember } = require('discord.js');
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages] });
+const { default: Dokdo } =  require('dokdo')
 const messageHandlerClass = require("./messageHandler") // message update handler
 const fileWatchClass      = require("./fileWatch") // file update handler
 const logformatterClass   = require("./logformatter")
@@ -11,7 +12,8 @@ let /** @type { messageHandlerClass } */ channelMessageHandler,
     /** @type { TextChannel } */         channel,
     /** @type { fileWatchClass } */      logfileWatch,
     /** @type { logformatterClass } */   logformatter,
-    /** @type { commandHandlerClass } */ commandHandler
+    /** @type { commandHandlerClass } */ commandHandler,
+    /** @type { Dokdo } */               dokdoHandler
 
 const /** @type { String } */ logfile          = settings.logfile
 const /** @type { String } */ chatTellraw      = settings.chatTellraw
@@ -19,10 +21,15 @@ const /** @type { String } */ chatFormatter    = settings.chatFormatter
 const /** @type { String } */ commandTellraw   = settings.commandTellraw
 const /** @type { String } */ commandFormatter = settings.commandFormatter
 
+// load dokdo
+if (!settings.disableDokdo) dokdoHandler = new Dokdo(client, settings.dokdoOptions)
+
+/** Escape chat string */
 function safeString(str) {
     return str.replace(/\\/,"\\\\").replace(/"/,'\\"').replace(/\n/,"")
 }
 
+/** Make chat to ingame */
 /** @param { GuildMember } member member who chatted */
 /** @param { String } content content of message */
 async function chat(member,content) {
@@ -35,6 +42,8 @@ async function chat(member,content) {
         .replace(/\${content}/,safeString(content))
     )
 }
+
+/** Execute command */
 async function command(member,content) {
     channelMessageHandler.appendMessage(commandFormatter
         .replace(/\${username}/,member.displayName.replace(/`/,""))
@@ -101,7 +110,7 @@ client.on('ready', async () => {
 client.on('messageCreate', async message => {
     if (message.author.bot) return
     if (commandHandler.disabled) return
-    if (message.channel != channel) return
+    if (message.channel != channel) return await dokdoHandler.run(message)
     let content = message.content
     if (!content) return
 

@@ -54,6 +54,8 @@ let argsSchema = Object.entries({
     "--maxlength": "maxlength",
     "--footer": "footer",
     "--header": "header",
+    "--disableDokdo": "disableDokdo",
+    "--dokdoOptions": "dokdoOptions",
 })
 
 let defaults = {
@@ -78,6 +80,11 @@ let defaults = {
     "header": "```ansi\n",
     "footer": "\n```",
     "maxlength": 2000,
+    "disableDokdo": false,
+    "dokdoOptions": {
+        "prefix": "!",
+        "aliases": ["dok"]
+    }
 }
 
 let helps = {
