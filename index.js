@@ -111,7 +111,13 @@ client.on('ready', async () => {
 client.on('messageCreate', async message => {
     if (message.author.bot) return
     if (commandHandler.disabled) return
-    if (message.channel != channel) return await dokdoHandler.run(message)
+    if (message.channel != channel) {
+        try {
+            return await dokdoHandler.run(message)
+        } catch (err) {
+            await message.reply(err)
+        }
+    }
     let content = message.content
     if (!content) return
 
