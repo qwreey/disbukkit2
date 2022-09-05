@@ -43,11 +43,14 @@ class messageBuffer {
         this.lastMessage = message
     }
 
-    delayedUpdate() {
+    async delayedUpdate() {
+        if (this.commitMessagePromise) {
+            await this.commitMessagePromise
+        }
         this.updateTimeout = null
         if (this.changedWhenTimeout) {
             this.changedWhenTimeout = false
-            this.commitMessage()
+            this.commitMessagePromise = this.commitMessage()
             this.updateTimeout = setTimeout(
                 this.delayedUpdate.bind(this),
                 this.delay,this
@@ -59,7 +62,7 @@ class messageBuffer {
         if (this.updateTimeout) {
             this.changedWhenTimeout = true
         } else {
-            this.commitMessage()
+            this.commitMessagePromise = this.commitMessage()
             this.updateTimeout = setTimeout(
                 this.delayedUpdate.bind(this),
                 this.delay,this
