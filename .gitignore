@@ -9,7 +9,7 @@ yarn.lock
 package.lock.json
 
 # config file
-disbucket.config.json
+disbukkit.config.json
 
 # node modules
 node_modules/**
