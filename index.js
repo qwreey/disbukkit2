@@ -108,14 +108,14 @@ client.on('ready', async () => {
     console.log(`[INFO] Logged in as ${client.user.tag}!`)
 })
 
-function checkIsDisabledCommand(command) {
-    if (!command.startsWith("/")) return
+function checkIsDisabledCommand(content) {
+    if (!content.startsWith("/")) return
     let disabledCommandList = settings.disabledCommandList
     if (!disabledCommandList) return
-    disabledCommandList.forEach(item=>{
+    for (let item of disabledCommandList) {
         let commandName = "/"+item
-        if (command == commandName || command.startsWith(commandName + " ")) return true
-    })
+        if (content == commandName || content.startsWith(commandName + " ")) return true
+    }
 }
 
 client.on('messageCreate', async message => {
