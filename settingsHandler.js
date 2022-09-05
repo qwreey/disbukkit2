@@ -56,6 +56,9 @@ let argsSchema = Object.entries({
     "--header": "header",
     "--disableDokdo": "disableDokdo",
     "--dokdoOptions": "dokdoOptions",
+    "--maxMessageLength": "maxMessageLength",
+    "--disabledCommand": "disabledCommand",
+    "--disabledCommandList": "disabledCommandList",
 })
 
 let defaults = {
@@ -66,6 +69,10 @@ let defaults = {
     "commandFormatter": "\x1b[35m[@${username}]\x1b[0m executed /${content}",
     "commandNotPermitted": "\x1b[31m[@${username}] You don't have permission to execute that command\x1b[0m",
     "chatNotPermitted": "\x1b[31m[@${username}] You don't have permission to chat\x1b[0m",
+    "messageTooLong": "\x1b[31m[@${username}] Your message too long that not sent\x1b[0m",
+    "disabledCommand": "\x1b[31m[@${username}] This command was disabled\x1b[0m",
+    "disabledCommandList": ["help"],
+    "maxMessageLength": 400,
     "commandProcess": {
         "name": "tmux",
         "argsBeforeSession": ["send-keys","-t"],

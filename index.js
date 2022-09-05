@@ -108,6 +108,16 @@ client.on('ready', async () => {
     console.log(`[INFO] Logged in as ${client.user.tag}!`)
 })
 
+function checkIsDisabledCommand(command) {
+    if (!command.startsWith("/")) return
+    let disabledCommandList = settings.disabledCommandList
+    if (!disabledCommandList) return
+    disabledCommandList.forEach(item=>{
+        let commandName = "/"+item
+        if (command == commandName || command.startsWith(commandName + " ")) return true
+    })
+}
+
 client.on('messageCreate', async message => {
     if (message.author.bot) return
     if (commandHandler.disabled) return
@@ -121,8 +131,15 @@ client.on('messageCreate', async message => {
     let content = message.content
     if (!content) return
 
-    if (content == "/list") { // list players
+    if (content == "/list" || content.startsWith("/list ")) { // list players
         command(message.member,"list")
+    } else if (checkIsDisabledCommand(content)) {
+        channelMessageHandler.appendMessage(
+            settings.disabledCommand.replace(
+                /\${username}/,
+                safeString(message.member.displayName)
+            )
+        )
     } else if (content.startsWith("/")) { // command mode
         content = content.substring(1)
         let commandableRole = settings.commandableRole
@@ -152,7 +169,16 @@ client.on('messageCreate', async message => {
     } else { // chat mode
         let chatableRole = settings.chatableRole
         if (!chatableRole || message.member.roles.cache.has(chatableRole)) {
-            chat(message.member,content) // DO NOT AWAIT!
+            if (content.length > settings.maxMessageLength) {
+                channelMessageHandler.appendMessage(
+                    settings.messageTooLong.replace(
+                        /\${username}/,
+                        safeString(message.member.displayName)
+                    )
+                )
+            } else {
+                chat(message.member,content) // DO NOT AWAIT!
+            }
         } else {
             channelMessageHandler.appendMessage(
                 settings.chatNotPermitted.replace(
