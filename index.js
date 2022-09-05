@@ -115,7 +115,7 @@ client.on('messageCreate', async message => {
         try {
             return await dokdoHandler.run(message)
         } catch (err) {
-            await message.reply(err)
+            try { await message.reply(err) } catch {}
         }
     }
     let content = message.content

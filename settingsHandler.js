@@ -62,7 +62,7 @@ let defaults = {
     "logfile": "./logs/latest.log",
     "chatTellraw": "execute as @a run tellraw @s [{\"color\":\"green\",\"text\":\"[@${username}]\"},{\"color\":\"white\",\"text\":\" ${content}\"}]",
     "chatFormatter": "\x1b[35m[@${username}]\x1b[0m ${content}",
-    "commandTellraw": "tellraw @a [{\"color\":\"green\",\"text\":\"[@${username}] execute \"},{\"color\":\"white\",\"text\":\" /${content}\"}]",
+    "commandTellraw": "execute as @a run tellraw @s [{\"color\":\"green\",\"text\":\"[@${username}] execute \"},{\"color\":\"white\",\"text\":\" /${content}\"}]",
     "commandFormatter": "\x1b[35m[@${username}]\x1b[0m executed /${content}",
     "commandNotPermitted": "\x1b[31m[@${username}] You don't have permission to execute that command\x1b[0m",
     "chatNotPermitted": "\x1b[31m[@${username}] You don't have permission to chat\x1b[0m",
