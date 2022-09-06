@@ -7,7 +7,9 @@
     "node-watch": "^0.7.3"
   },
   "scripts": {
-    "build": "pkg . --targets node18-linux-arm64,node18-linux-x64 --out-path dist"
+    "build": "pkg . --targets node18-linux-arm64,node18-linux-x64 --out-path dist",
+    "build-arm64": "pkg . --targets node18-linux-arm64 --out-path dist",
+    "build-x64": "pkg . --targets node18-linux-x64 --out-path dist"
   },
   "bin": "index.js",
   "name": "disbukkit",
