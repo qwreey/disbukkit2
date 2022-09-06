@@ -74,7 +74,7 @@ class messageBuffer {
         let formatter = this.formatter
         for (let str of appendString.split("\n")) {
             if ((!noFormatter) && formatter) str = formatter(str)
-            if (!str || str.length == 0) return
+            if (!str || str.length == 0) continue
 
             str = str.trim() + "\n"
             let buflen = this.committed.length
