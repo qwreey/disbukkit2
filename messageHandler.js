@@ -72,21 +72,21 @@ class messageBuffer {
 
     appendMessage(appendString,noFormatter) {
         let formatter = this.formatter
-        appendString.split(/\r?\n/).forEach(str=>{
+        for (let str of appendString.split("\n")) {
             if ((!noFormatter) && formatter) str = formatter(str)
             if (!str || str.length == 0) return
 
             str = str.trim() + "\n"
             let buflen = this.committed.length
             if (buflen == 0 || !this.committed[0]) {
-                this.committed[0] = this.header
-                buflen = 1
+                this.committed[0] = this.header + str
+                continue
             }
 
             if (this.committed[buflen-1].length + str.length <= this.maxlength) {
                 this.committed[buflen-1] += str
-            } else this.committed[buflen] = this.header + str.substring(this.maxlength)
-        })
+            } else this.committed[buflen] = this.header + str.substring(0,this.maxlength)
+        }
 
         this.updateMessage()
     }
