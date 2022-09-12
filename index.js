@@ -137,7 +137,7 @@ client.on('messageCreate', async message => {
         channelMessageHandler.appendMessage(
             settings.disabledCommand.replace(
                 /\${username}/,
-                safeString(message.member.displayName)
+                safeString(message.author.tag)
             )
         )
     } else if (content.startsWith("/")) { // command mode
