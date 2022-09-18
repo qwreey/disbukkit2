@@ -162,7 +162,7 @@ client.on('messageCreate', async message => {
             channelMessageHandler.appendMessage(
                 settings.commandNotPermitted.replace(
                     /\${username}/,
-                    safeString(message.member.displayName)
+                    safeString(message.author.tag)
                 )
             )
         }
@@ -173,7 +173,7 @@ client.on('messageCreate', async message => {
                 channelMessageHandler.appendMessage(
                     settings.messageTooLong.replace(
                         /\${username}/,
-                        safeString(message.member.displayName)
+                        safeString(message.author.tag)
                     )
                 )
             } else {
@@ -183,7 +183,7 @@ client.on('messageCreate', async message => {
             channelMessageHandler.appendMessage(
                 settings.chatNotPermitted.replace(
                     /\${username}/,
-                    safeString(message.member.displayName)
+                    safeString(message.author.tag)
                 )
             )
         }
