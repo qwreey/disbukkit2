@@ -35,11 +35,11 @@ function safeString(str) {
 /** @param { String } content content of message */
 async function chat(member,content) {
     channelMessageHandler.appendMessage(chatFormatter
-        .replace(/\${username}/,member.displayName.replace(/`/,""))
+        .replace(/\${username}/,member.user.tag.replace(/`/,""))
         .replace(/\${content}/,content.replace(/`/,"")),true
     )
     await commandHandler.executeCommand(chatTellraw
-        .replace(/\${username}/,safeString(member.displayName))
+        .replace(/\${username}/,safeString(member.user.tag))
         .replace(/\${content}/,safeString(content))
     )
 }
@@ -47,12 +47,12 @@ async function chat(member,content) {
 /** Execute command */
 async function command(member,content) {
     channelMessageHandler.appendMessage(commandFormatter
-        .replace(/\${username}/,member.displayName.replace(/`/,""))
+        .replace(/\${username}/,member.user.tag.replace(/`/,""))
         .replace(/\${content}/,content.replace(/`/,"")),true
     )
     await Promise.all([
         commandHandler.executeCommand(commandTellraw
-        .replace(/\${username}/,safeString(member.displayName))
+        .replace(/\${username}/,safeString(member.user.tag))
             .replace(/\${content}/,safeString(content))
         ),
         commandHandler.executeCommand(content)
