@@ -109,12 +109,19 @@ client.on('ready', async () => {
 })
 
 function checkIsDisabledCommand(content) {
-    if (!content.startsWith("/")) return
+    if (!content.startsWith(settings.commandPrefix)) return
     let disabledCommandList = settings.disabledCommandList
     if (!disabledCommandList) return
     for (let item of disabledCommandList) {
-        let commandName = "/"+item
+        let commandName = settings.commandPrefix+item
         if (content == commandName || content.startsWith(commandName + " ")) return true
+    }
+}
+
+function checkAllowedCommandsForChatable(content) {
+    let allowedCommandsForChatable = settings.allowedCommandsForChatable
+    for (let item of allowedCommandsForChatable) {
+        if (content == item || content.startsWith(item + " ")) return true
     }
 }
 
@@ -131,34 +138,29 @@ client.on('messageCreate', async message => {
     let content = message.content
     if (!content) return
 
-    if (content == "/list" || content.startsWith("/list ")) { // list players
-        command(message.member,"list")
-    } else if (checkIsDisabledCommand(content)) {
+    if (checkIsDisabledCommand(content)) {
         channelMessageHandler.appendMessage(
             settings.disabledCommand.replace(
                 /\${username}/,
                 safeString(message.author.tag)
             )
         )
-    } else if (content.startsWith("/")) { // command mode
-        content = content.substring(1)
+    } else if (content.startsWith(settings.commandPrefix)) { // command mode
+        content = content.substring(settings.commandPrefix.length)
         let commandableRole = settings.commandableRole
-        let allowed = commandableRole && message.member.roles.cache.has(commandableRole)
+        let allowed = commandableRole && message.member.roles.cache.has(commandableRole) // check user have permission to use command
 
-        if (!allowed && settings.allowedCommands) {
+        // if user have no permission to command, check allowed commands
+        if (!allowed && settings.allowedCommandsForChatable) {
             let chatableRole = settings.chatableRole
-            if (!chatableRole || message.member.roles.cache.has(chatableRole)) {
-                for (let command of settings.allowedCommands) {
-                    if (content.startsWith(command)) {
-                        allowed = true
-                    }
-                }
+            if (!chatableRole || message.member.roles.cache.has(chatableRole)) { // check user have chatable role
+                allowed = checkAllowedCommandsForChatable(content)
             }
         }
 
-        if (allowed) {
+        if (allowed) { // allowed to command
             command(message.member,content)
-        } else {
+        } else { // not permitted
             channelMessageHandler.appendMessage(
                 settings.commandNotPermitted.replace(
                     /\${username}/,
