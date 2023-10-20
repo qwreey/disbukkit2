@@ -134,6 +134,7 @@ client.on('messageCreate', async message => {
         } catch (err) {
             try { await message.reply(err) } catch {}
         }
+        return
     }
     let content = message.content
     if (!content) return
