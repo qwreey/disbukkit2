@@ -77,9 +77,9 @@ client.on('ready', async () => {
     logfileWatch.on("append",(/** @type {String} */ content)=>{
         // when startup
         if (ignore) {
-            if (content.match(/Timings Reset/)) {
+            if (content.match(/^\[\d+:\d+:\d+] \[Server thread\/INFO\]: Done \([\d\.]+s\)! For help, type "help"/)) {
                 console.log(`[INFO] Tracking log file '${logfile}' started`)
-                channelMessageHandler.appendMessage("Timings Reset")
+                channelMessageHandler.appendMessage("\x1b[32;1m[ Server started ]\x1b[0m")
                 ignore = false
             }
             return
@@ -88,7 +88,7 @@ client.on('ready', async () => {
         // when closing
         if (content.match(/^\[\d+:\d+:\d+] \[Server thread\/INFO\]: Stopping the server/)) {
             console.log("[INFO] Stopped tracking log file")
-            channelMessageHandler.appendMessage("Stopping the server")
+            channelMessageHandler.appendMessage("\x1b[31;1m[ Server closed ]\x1b[0m")
             ignore = true
             return
         }

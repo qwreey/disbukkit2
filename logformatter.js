@@ -48,13 +48,51 @@ local colorsAfter = {
 
         // chat
         [/^\s*\[\d+:\d+:\d+\] <[^ ]+>/,str=>`\x1b[34;1m${str}\x1b[0m`],
+        
+        // seed
+        [/^\s*(\[\d+:\d+:\d+\]) Seed: \[\d+\]/,"$1 Seed: [?????????]"],
 
         // server started, stopped message
-        [/^\s*(\[\d+:\d+:\d+\])? ?Stopping the server/,"\x1b[31;1m[ Server closed ]\x1b[0m"],
-        [/^\s*(\[\d+:\d+:\d+\])? ?Timings Reset/,"\x1b[32;1m[ Server started ]\x1b[0m"],
+        // [/^\s*(\[\d+:\d+:\d+\])? ?Closing Server/,"\x1b[31;1m[ Server closed ]\x1b[0m"],
+        // [/^\s*(\[\d+:\d+:\d+\])? ?Done \([\d\.]+s\)! For help, type "help"/,"\x1b[32;1m[ Server started ]\x1b[0m"],
     ]
 
     defaultIgnore = [
+        // error messages
+        /^\s*at /,
+        /^\s*... \d+ more/,
+        /^\s*Caused by: /,
+        /^\s*\[\d+:\d+:\d+\] \[.*ERROR\]: /,
+        /^\s*\[\d+:\d+:\d+\] \[Server console handler\/(INFO|WARN)\]: /,
+        // /^\s*\[\d+:\d+:\d+\] \[Server thread\/WARN\]: /, // moved wrongly ...
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Server permissions file permissions.yml is empty, ignoring it/,
+        /^(com|java|sun)\./,
+
+        // villager die messages
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Villager EntityVillager/,
+        
+        // Timings
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Timings/,
+
+        // console target messages
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: CONSOLE: /,
+        
+        // moving check
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/WARN\]: [^ ]+ moved (wrongly!|too quickly!)/,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/WARN\]: [^ ]+ (vehicle of [^ ]+) moved (wrongly!|too quickly!)/,
+        
+        // reload
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Server Ping Player Sample Count: /,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Using \d+ threads for Netty based IO/,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Loaded \d+ recipes/,
+        
+        // chunk system
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: \[ChunkHolderManager\]/,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: ThreadedAnvilChunkStorage/,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Saving chunks for level/,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Flushing Chunk IO/,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Closing Thread Pool/,
+
         // private messages
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: [^ ]+ issued server command: \/teammsg /,
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: [^ ]+ issued server command: \/tell /,
@@ -65,11 +103,13 @@ local colorsAfter = {
         // hidding repeated join and leave message
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: [^ ]+ logged in with entity id/,
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: [^ ]+ lost connection:/,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: com.mojang.authlib.GameProfile@/,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Disconnecting com.mojang.authlib.GameProfile@/,
 
         // auth and server messages
-        /^\s*\[\d+:\d+:\d+\] \[User Authenticator #\d+\/INFO\]:/,
-        /^\s*\[\d+:\d+:\d+\] \[ServerMain\/INFO\]:/,
-        /^\s*\[\d+:\d+:\d+\] \[Worker-Main-\d+\/INFO\]:/,
+        /^\s*\[\d+:\d+:\d+\] \[User Authenticator #\d+\/(INFO|WARN)\]:/,
+        /^\s*\[\d+:\d+:\d+\] \[ServerMain\/(INFO|WARN)\]:/,
+        /^\s*\[\d+:\d+:\d+\] \[Worker-Main-\d+\/(INFO|WARN)\]:/,
     ]
 
     constructor(config) {
