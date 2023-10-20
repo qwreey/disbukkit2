@@ -99,7 +99,7 @@ client.on('ready', async () => {
         channelMessageHandler.appendMessage(content)
     })
 
-    // when start up bucket, enable ignore mode
+    // when start up bukkit, enable ignore mode
     // for removing message which not usefull for players
     logfileWatch.on("reset",()=>{
         console.log(`[INFO] Log file was inited`)
