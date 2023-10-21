@@ -52,6 +52,9 @@ local colorsAfter = {
         // seed
         [/^\s*(\[\d+:\d+:\d+\]) Seed: \[\d+\]/,"$1 Seed: [?????????]"],
 
+        // spark
+        [/^\s*\[\d+:\d+:\d+\] \[Craft Scheduler Thread - \d+ - spark\/INFO\]: (\[.*\] [^\n]+)/,"$1"],
+
         // server started, stopped message
         // [/^\s*(\[\d+:\d+:\d+\])? ?Closing Server/,"\x1b[31;1m[ Server closed ]\x1b[0m"],
         // [/^\s*(\[\d+:\d+:\d+\])? ?Done \([\d\.]+s\)! For help, type "help"/,"\x1b[32;1m[ Server started ]\x1b[0m"],
@@ -71,8 +74,10 @@ local colorsAfter = {
         // villager die messages
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Villager EntityVillager/,
         
-        // Timings
+        // Timings / spark
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Timings/,
+        /^\s*\[\d+:\d+:\d+\] \[Craft Scheduler Thread - \d+ - spark\/INFO\]: \[.*\] *$/,
+        /^\s*\[\d+:\d+:\d+\] \[Craft Scheduler Thread - 1 - spark\/INFO\]: [⚡] spark v[\d\.]+/,
 
         // console target messages
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: CONSOLE: /,
@@ -105,6 +110,10 @@ local colorsAfter = {
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: [^ ]+ lost connection:/,
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: com.mojang.authlib.GameProfile@/,
         /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Disconnecting com.mojang.authlib.GameProfile@/,
+        
+        // Dragon
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Scanning for legacy world dragon fight\.+/,
+        /^\s*\[\d+:\d+:\d+\] \[Server thread\/INFO\]: Found that the dragon has not yet been killed in this world\.+/,
 
         // auth and server messages
         /^\s*\[\d+:\d+:\d+\] \[User Authenticator #\d+\/(INFO|WARN)\]:/,
